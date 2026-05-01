@@ -54,7 +54,7 @@ MOVE_COST = 1
 class State:
     def __init__(self, player_pos, boxes):
         self.player = player_pos  # (x, y)
-        self.boxes = frozenset(boxes)  # set of (x, y) immutable
+        self.boxes = frozenset(boxes)   # set of (x, y) immutable
 
     def get_boxes(self):
         return list(self.boxes)
