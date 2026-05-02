@@ -1,12 +1,9 @@
 import heapq
 from collections import deque
-from enum import unique
-
 
 def bfs_solve(game):
     start_state = game.get_initial_state()
     node_solution = {start_state: []}
-    solution = []
 
     if game.is_goal(start_state):
         return node_solution[start_state]
@@ -19,17 +16,17 @@ def bfs_solve(game):
     while frontier:
         current_state = frontier.popleft()
 
-        for child in game.get_successors(current_state):
+        for action, next_state, cost in game.get_successors(current_state):
             solution = node_solution[current_state]
 
-            if (child[1] not in explored) and (child[1] not in frontier):
-                explored.add(child[1])
-                node_solution[child[1]] = solution + [child[0]]
+            if (next_state not in explored) and (next_state not in frontier):
+                explored.add(next_state)
+                node_solution[next_state] = solution + [action]
 
-                if game.is_goal(child[1]):
-                    return node_solution[child[1]]
+                if game.is_goal(next_state):
+                    return node_solution[next_state]
 
-                frontier.append(child[1])
+                frontier.append(next_state)
     return None
 
 
