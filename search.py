@@ -19,7 +19,7 @@ def bfs_solve(game):
         for action, next_state, cost in game.get_successors(current_state):
             solution = node_solution[current_state]
 
-            if (next_state not in explored) and (next_state not in frontier):
+            if next_state not in explored:
                 explored.add(next_state)
                 node_solution[next_state] = solution + [action]
 
