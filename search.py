@@ -150,7 +150,7 @@ def astar_solve(game):
 
             return directions
 
-        def box_move_dir_u(g, box):
+        def box_move_dir_u(g, box, width):
             move_right_cnt = 0
             move_left_cnt = 0
 
@@ -158,11 +158,15 @@ def astar_solve(game):
             while g.is_wall((x, y)):
                 move_right_cnt += 1
                 x += 1
+            if (box[0] + x, box[1]) == width:
+                move_right_cnt = 1000_000
 
             x, y = box[0], box[1] + 1
             while g.is_wall((x, y)):
                 move_left_cnt += 1
                 x -= 1
+            if x < 0:
+                move_left_cnt = 1000_000
 
             min_move = min(move_right_cnt, move_left_cnt)
             if min_move == move_right_cnt:
@@ -170,7 +174,7 @@ def astar_solve(game):
             else:
                 return 'l', min_move, move_right_cnt
 
-        def box_move_dir_d(g, box):
+        def box_move_dir_d(g, box, width):
             move_right_cnt = 0
             move_left_cnt = 0
 
@@ -178,11 +182,15 @@ def astar_solve(game):
             while g.is_wall((x, y)):
                 move_right_cnt += 1
                 x += 1
+            if (box[0] + x, box[1]) == width:
+                move_right_cnt = 1000_000
 
             x, y = box[0], box[1] - 1
             while g.is_wall((x, y)):
                 move_left_cnt += 1
                 x -= 1
+            if x < 0:
+                move_left_cnt = 1000_000
 
             min_move = min(move_right_cnt, move_left_cnt)
             if min_move == move_right_cnt:
@@ -190,7 +198,7 @@ def astar_solve(game):
             else:
                 return 'l', min_move, move_right_cnt
 
-        def box_move_dir_l(g, box):
+        def box_move_dir_l(g, box, height):
             move_down_cnt = 0
             move_up_cnt = 0
 
@@ -198,11 +206,15 @@ def astar_solve(game):
             while g.is_wall((x, y)):
                 move_down_cnt += 1
                 y += 1
+            if (box[0], box[1] + y) == height:
+                move_down_cnt = 1000_000
 
             x, y = box[0] + 1, box[1]
             while g.is_wall((x, y)):
                 move_up_cnt += 1
                 y -= 1
+            if y < 0:
+                move_up_cnt = 1000_000
 
             min_move = min(move_down_cnt, move_up_cnt)
             if min_move == move_down_cnt:
@@ -210,7 +222,7 @@ def astar_solve(game):
             else:
                 return 'u', min_move, move_down_cnt
 
-        def box_move_dir_r(g, box):
+        def box_move_dir_r(g, box, height):
             move_down_cnt = 0
             move_up_cnt = 0
 
@@ -218,11 +230,15 @@ def astar_solve(game):
             while g.is_wall((x, y)):
                 move_down_cnt += 1
                 y += 1
+            if (box[0], box[1] + y) == height:
+                move_down_cnt = 1000_000
 
             x, y = box[0] - 1, box[1]
             while g.is_wall((x, y)):
                 move_up_cnt += 1
                 y -= 1
+            if y < 0:
+                move_up_cnt = 1000_000
 
             min_move = min(move_down_cnt, move_up_cnt)
             if min_move == move_down_cnt:
@@ -234,12 +250,14 @@ def astar_solve(game):
             if box == target:
                 return 0
 
+            width = game.get_grid_width()
+            height = game.get_grid_height()
             target_dir = get_target_pos_from_box(box, target)
             min_move = 0
 
             # box should move up but there are walls below
             if 'u' in target_dir and is_wall(game, 'd', box):
-                move_dir, min_move, other_move = box_move_dir_u(game, box)
+                move_dir, min_move, other_move = box_move_dir_u(game, box, width)
 
                 if (('l' in target_dir and move_dir == 'r')
                         or ('r' in target_dir and move_dir == 'l')):
@@ -247,7 +265,7 @@ def astar_solve(game):
 
             # box should move down but there are walls above
             if 'd' in target_dir and is_wall(game, 'u', box):
-                move_dir, min_move, other_move = box_move_dir_d(game, box)
+                move_dir, min_move, other_move = box_move_dir_d(game, box, width)
 
                 if (('l' in target_dir and move_dir == 'r')
                         or ('r' in target_dir and move_dir == 'l')):
@@ -255,7 +273,7 @@ def astar_solve(game):
 
             # box should move left but there are walls on the right
             if 'l' in target_dir and is_wall(game, 'r', box):
-                move_dir, min_move, other_move = box_move_dir_l(game, box)
+                move_dir, min_move, other_move = box_move_dir_l(game, box, height)
 
                 if (('u' in target_dir and move_dir == 'd')
                         or ('d' in target_dir and move_dir == 'u')):
@@ -263,7 +281,7 @@ def astar_solve(game):
 
             # box should move right but there are walls on the left
             if 'r' in target_dir and is_wall(game, 'l', box):
-                move_dir, min_move, other_move = box_move_dir_r(game, box)
+                move_dir, min_move, other_move = box_move_dir_r(game, box, height)
 
                 if (('u' in target_dir and move_dir == 'd')
                         or ('d' in target_dir and move_dir == 'u')):
