@@ -55,9 +55,7 @@ def ids_solve(game):
                 if next_state not in explored:
                     explored.add(next_state)
                     node_solution[next_state] = solution + [action]
-
-                    if next_state not in path:
-                        path.append(next_state)
+                    path.append(next_state)
 
                 elif len(node_solution[next_state]) > len(solution) + 1:
                     node_solution[next_state] = solution + [action]
