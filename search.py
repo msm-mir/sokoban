@@ -67,7 +67,7 @@ def ids_solve(game):
                     return node_solution[next_state]
         return None
 
-    max_depth = 70
+    max_depth = 1000
     for i in range(max_depth):
         answer = dls_solve(game, i)
         if answer:
@@ -114,10 +114,16 @@ def astar_solve(game):
             return abs(start_pos[0] - end_pos[0]) + abs(start_pos[1] - end_pos[1])
 
         def distance_sum(list1, list2):
+            # calculate wall penalty for the founded permutation of boxes and targets
+            penalty = 0
+            for i in range(min(len(list1), len(list2))):
+                penalty += wall_penalty(game, list1[i], list2[i])
+
             sum = 0
             for i in range(min(len(list1), len(list2))):
                 sum += manhattan(list1[i], list2[i])
-            return sum
+
+            return 5 * (sum + penalty)
 
         def is_wall(game, direction, box):
             match direction:
@@ -251,7 +257,6 @@ def astar_solve(game):
             width = game.get_grid_width()
             height = game.get_grid_height()
             target_dir = get_target_pos_from_box(box, target)
-            min_move = 0
 
             # box should move up but there are walls below
             if 'u' in target_dir and is_wall(game, 'd', box):
@@ -259,7 +264,10 @@ def astar_solve(game):
 
                 if (('l' in target_dir and move_dir == 'r')
                         or ('r' in target_dir and move_dir == 'l')):
-                    min_move = min(2 * min_move, other_move)
+                    if 2 * min_move < other_move:
+                        return 2 * min_move
+                    else:
+                        return 0
 
             # box should move down but there are walls above
             if 'd' in target_dir and is_wall(game, 'u', box):
@@ -267,7 +275,10 @@ def astar_solve(game):
 
                 if (('l' in target_dir and move_dir == 'r')
                         or ('r' in target_dir and move_dir == 'l')):
-                    min_move = min(2 * min_move, other_move)
+                    if 2 * min_move < other_move:
+                        return 2 * min_move
+                    else:
+                        return 0
 
             # box should move left but there are walls on the right
             if 'l' in target_dir and is_wall(game, 'r', box):
@@ -275,7 +286,10 @@ def astar_solve(game):
 
                 if (('u' in target_dir and move_dir == 'd')
                         or ('d' in target_dir and move_dir == 'u')):
-                    min_move = min(2 * min_move, other_move)
+                    if 2 * min_move < other_move:
+                        return 2 * min_move
+                    else:
+                        return 0
 
             # box should move right but there are walls on the left
             if 'r' in target_dir and is_wall(game, 'l', box):
@@ -283,12 +297,12 @@ def astar_solve(game):
 
                 if (('u' in target_dir and move_dir == 'd')
                         or ('d' in target_dir and move_dir == 'u')):
-                    min_move = min(2 * min_move, other_move)
+                    if 2 * min_move < other_move:
+                        return 2 * min_move
+                    else:
+                        return 0
 
-            if min_move > 0:
-                return min_move * 5 + 6
-            else:
-                return 0
+            return 0
 
         # heuristic starts here
         # config
@@ -308,12 +322,7 @@ def astar_solve(game):
             box_target_per[box_per] = distance_sum(box_per, targets)
         correct_box_target_per, min_dis_box_target = min(box_target_per.items(), key=lambda x: x[1])
 
-        # calculate wall penalty for the founded permutation of boxes and targets
-        penalty = 0
-        for i in range(len(targets)):
-            penalty += wall_penalty(game, correct_box_target_per[i], targets[i])
-
-        return (5 * min_dis_box_target) + (min_player_dis - 1) + penalty
+        return min_dis_box_target + (min_player_dis - 1)
 
     # astar starts here
     start_state = game.get_initial_state()
