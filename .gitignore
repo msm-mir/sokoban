@@ -1,3 +1,6 @@
 Phase1.pdf
 /.idea/
 /.venv/
+/__pycache__/
+/env/__pycache__/
+/src/__pycache__/
