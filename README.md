@@ -1,20 +1,13 @@
 # Sokoban Solver using AI Search Algorithms
 
 ## Project Overview
+
 This project models the Sokoban game as a search problem and solves it using classic AI search algorithms. In Sokoban, the player must push boxes onto designated target cells in a grid-based environment. The challenge lies in avoiding deadlocks and finding an efficient sequence of moves.
 
 ---
 
-## Core Components
-- **State Representation**: Formal definition of states including positions of the player and all boxes
-- **Action Model**: Legal movements of the player and box-pushing mechanics
-- **Transition Function**: Rules for generating successor states
-- **Goal Test**: Verification that all boxes are located on target cells
-- **Cost Function**: Step-based or uniform cost for search algorithms
-
----
-
 ## Core Environment
+
 - Grid-based Sokoban environment (N × M) with walls, player, boxes, and target cells.  
 - State is defined by the positions of the player and all boxes.  
 - Actions include moving and pushing boxes (no pulling allowed).  
@@ -22,7 +15,8 @@ This project models the Sokoban game as a search problem and solves it using cla
 
 ---
 
-## Implementation Requirements
+## Implementation
+
 - Breadth-First Search (BFS)
 - Uniform Cost Search (UCS)
 - Iterative Deepening Search (IDS) (or Depth-Limited Search as an alternative)
@@ -30,7 +24,8 @@ This project models the Sokoban game as a search problem and solves it using cla
 
 ---
 
-## Learning Objectives
+## Objectives
+
 - Model real-world problems as state-space search problems  
 - Implement and compare uninformed and informed search algorithms  
 - Design admissible and consistent heuristic functions  
@@ -39,8 +34,26 @@ This project models the Sokoban game as a search problem and solves it using cla
 ---
 
 ## Requirements
+
 - Python 3.x
 - pygame library (for visualization)
+
+---
+
+## Project Structure
+
+```
+├── env/
+│   ├── img/
+│   ├── gui.py
+│   ├── levels.py
+│   └── sokoban.py
+├── src/
+│   ├── main.py
+│   └── search.py
+├── .gitignore
+└── README.md
+```
 
 ---
 
