@@ -15,7 +15,7 @@ This project models the Sokoban game as a search problem and solves it using cla
 
 ---
 
-## Implementation
+## Implemented Algorithms
 
 - Breadth-First Search (BFS)
 - Uniform Cost Search (UCS)
